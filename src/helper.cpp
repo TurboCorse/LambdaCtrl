@@ -269,15 +269,14 @@ void Start(void)
 void Calibrate(void)
 {
 	static uint8_t n;
-	uint16_t ret;
 	Abl.Mode = CALIBRATION;
 	
 	/* Turn cj125 into calibration mode */
 	if (Abl.CjMode != cjCALIBRATION)
 	{
-		ret = ComCj(CJ125_INIT_REG1_MODE_CALIBRATE);
+		Abl.CjAnsw  = ComCj(CJ125_INIT_REG1_MODE_CALIBRATE);
 		/* Check if the command was valid */
-		if ((ret & Cj125_CMD_VALID_MASK) == CJ125_CMD_VALID)
+		if ((Abl.CjAnsw  & Cj125_CMD_VALID_MASK) == CJ125_CMD_VALID)
 		{
 			Abl.CjMode = cjCALIBRATION;
 			n = 0;
@@ -326,7 +325,6 @@ void Calibrate(void)
  */
 void Idle(void)
 {
-	uint16_t ret;
 	static uint32_t ledtick;
 	
 	Abl.Mode = IDLE;
@@ -334,9 +332,9 @@ void Idle(void)
 	/* Turn cj125 into normal mode */
 	if (Abl.CjMode != cjNORMALV8)
 	{
-		ret = ComCj(CJ125_INIT_REG1_MODE_NORMAL_V8);
+		Abl.CjAnsw  = ComCj(CJ125_INIT_REG1_MODE_NORMAL_V8);
 		/* Check if the command was valid */
-		if ((ret & Cj125_CMD_VALID_MASK) == CJ125_CMD_VALID)
+		if ((Abl.CjAnsw  & Cj125_CMD_VALID_MASK) == CJ125_CMD_VALID)
 		{
 			Abl.CjMode = cjNORMALV8;
 		}
@@ -692,7 +690,7 @@ void SendCfg(void)
 	*/
 }
 
-#define RuntimeSize 20
+#define RuntimeSize 22
 
 void SendRuntime(void)
 {
@@ -726,6 +724,9 @@ void SendRuntime(void)
 
 	buffer[18] = lowByte(Abl.SupplyVoltage);
 	buffer[19] = highByte(Abl.SupplyVoltage);
+
+	buffer[20] = lowByte(Abl.CjAnsw);
+	buffer[21] = highByte(Abl.CjAnsw);
 
 	for (uint16_t i = 0; i < RuntimeSize; i++)
 	{
