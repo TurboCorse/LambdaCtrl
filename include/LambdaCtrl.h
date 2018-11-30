@@ -71,7 +71,7 @@
 #define PROBE_PID_PERIOD						10		/* xx milliseconds */
 
 #define DEBUG									1		/* Define debug mode 0 = off, 1 = Minimum, 2= all */
-
+#define COM_TS									1		/* Work with tuner studio */
 #define CFG_EEPROM_ADDR							0x0000	/* Address for configuration within EEPROM */
 
 #define MODE_TIMEOUT							5000	/* Max allowed time within a mode between START -> CALIBRATE */

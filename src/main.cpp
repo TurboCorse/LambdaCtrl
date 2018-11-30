@@ -92,6 +92,14 @@ void loop()
 	Abl.Tick = millis();
 	if ((Abl.Tick - Abl.LastMainTick) >= 2)
 	{
+		/* Check if we have serial data to read */
+		#if (COM_TS > 0)
+			if (Serial.available())
+			{
+				ParseSerial(Serial.read());
+			}
+		#endif
+
 		/* Read Inputs */	
 		Inputs(&In);
 		

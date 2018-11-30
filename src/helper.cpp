@@ -598,6 +598,48 @@ void CheckCfg(tCfg* cfg)
 	eeprom_update_block((const void*)cfg, CFG_EEPROM_ADDR, sizeof(tCfg));
 }
 
+
+void ParseSerial(uint8_t ch)
+{
+	static uint8_t pending;
+	static uint8_t cmd;
+	if (pending == false)
+	{
+		cmd = ch;
+	}
+
+	switch (cmd)
+	{
+		case 'A':
+			break;
+
+		case 'B':
+			break;
+
+		case 'C':
+			Serial.print("1");
+			break;
+
+		case 'F':
+			Serial.print("001");
+			break;
+		
+		case 'Q':
+			break;
+		
+		case 'S':
+			break;
+		
+		case 'W':
+			break;
+
+		default:
+			break;
+	}
+
+
+}
+
 void SendTbl(uint8_t* src, size_t size)
 {
 	for(uint16_t i = 0; i < size; i++)
