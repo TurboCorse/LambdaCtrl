@@ -300,7 +300,7 @@ void Calibrate(void)
 			Out.Led1 = HIGH;
 			Abl.Mode = IDLE;
 
-#if (DEBUG > 1)
+#if (DEBUG > 1 && COM_TS < 1)
 			Serial.print("UA:");
 			Serial.println(Abl.UAOpt);
 			Serial.print("UR:");
@@ -636,8 +636,7 @@ void ParseSerial(void)
 			Serial.print(F("IOExtendNanoLambda201811"));
 			break;
 		
-		case 'S':
-			
+		case 'S':			
 			Serial.print(F("Nano Lambda V0.0.1 201811 (c) TurboCorse Electronics"));
 			Abl.RuntimeSec = 0;
 			break;
