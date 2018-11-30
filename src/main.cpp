@@ -103,7 +103,7 @@ void loop()
 		Abl.LastSecondTick = Abl.Tick;
 	}
 
-	/* Check if we have serial data to read */
+	/* Check if we have serial data to read, this can be turned of with a define */
 #if (COM_TS > 0)
 	if (Serial.available() > 0)
 	{
@@ -196,7 +196,7 @@ void loop()
 			Out.Led1 ^= 1;
 		}
 
-#if (DEBUG > 1)
+#if (DEBUG > 1 && COM_TS < 1)
 		Serial.print(F("UR:"));
 		Serial.println(In.UR);
 		Serial.print(F("UA:"));
@@ -204,7 +204,7 @@ void loop()
 		Serial.print(F("IP:"));
 		Serial.println(Cj.IP);
 #endif
-#if (DEBUG > 0)
+#if (DEBUG > 0 && COM_TS < 1)
 		Serial.print(F("Mode:"));
 		Serial.println(ModeName[Abl.Mode]);
 		Serial.print(F("Supply:"));

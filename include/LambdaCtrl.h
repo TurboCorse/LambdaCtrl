@@ -23,10 +23,10 @@
 #define LED_STATUS_POWER                    	8		/* Pin used for power the status LED, indicating we have power. */
 #define LED_STATUS_HEATER                   	5		/* Pin used for the heater status LED, indicating heater activity. */
 #define HEATER_OUTPUT_PIN                   	9		/* Pin used for the PWM output to the heater circuit. */
-#define USUP_ANALOG_INPUT_PIN               	2		/* Analog input for power supply.*/
-#define UVREF_ANALOG_INPUT_PIN					3		/* Analog input for reference voltage supply.*/
-#define UR_ANALOG_INPUT_PIN                 	0		/* Analog input for temperature.*/
-#define UA_ANALOG_INPUT_PIN                 	1		/* Analog input for lambda.*/
+#define USUP_ANALOG_INPUT_PIN               	A2		/* Analog input for power supply.*/
+#define UVREF_ANALOG_INPUT_PIN					A3		/* Analog input for reference voltage supply.*/
+#define UR_ANALOG_INPUT_PIN                 	A0		/* Analog input for temperature.*/
+#define UA_ANALOG_INPUT_PIN                 	A1		/* Analog input for lambda.*/
 #define LAMBDA_PWM_OUTPUT_PIN               	6		/* Analog output linear Lambda voltage */
 #define EN_INPUT_PIN							4		/* Enable pin, low when engine running */
 #define SP1_INPUT_PIN							2		/* Spare input 1 */
@@ -70,7 +70,7 @@
 
 #define PROBE_PID_PERIOD						10		/* xx milliseconds */
 
-#define DEBUG									0		/* Define debug mode 0 = off, 1 = Minimum, 2= all */
+#define DEBUG									2		/* Define debug mode 0 = off, 1 = Minimum, 2= all */
 #define COM_TS									1		/* Work with tuner studio */
 #define CFG_EEPROM_ADDR							0x0000	/* Address for configuration within EEPROM */
 

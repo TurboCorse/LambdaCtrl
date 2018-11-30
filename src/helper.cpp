@@ -648,10 +648,10 @@ void ParseSerial(void)
 
 		case 'W':
 			MultiCmd = true;
-			if (Serial.available() >= 2)
+			if (Serial.available() >= 2)	// We need to more bytes. (Offset, Value)
 			{
 				uint8_t offset, value;
-				uint8_t *dst = (uint8_t *)&Cfg;
+				uint8_t *dst = (uint8_t*)&Cfg;
 
 				offset = Serial.read();	// Read offset where to store the received value
 				value = Serial.read();	// Value to store
@@ -675,15 +675,18 @@ void SendTbl(uint8_t* src, size_t size)
 
 void SendCfg(void)
 {
+	SendTbl((uint8_t*)&Cfg, sizeof(Cfg));
+/*
 	uint8_t *src = (uint8_t *)&Cfg;
 
 	for (uint16_t i = 0;  i  < sizeof(Cfg); i++)
 	{
 		Serial.write(*src++);
 	}
+	*/
 }
 
-#define RuntimeSize 9
+#define RuntimeSize 17
 
 void SendRuntime(void)
 {
@@ -700,6 +703,18 @@ void SendRuntime(void)
 	buffer[7] = hh(Abl.LoopsSec);
 
 	buffer[8] = Abl.Lambda;
+
+	buffer[9] = lowByte(Abl.UAOpt);
+	buffer[10] = highByte(Abl.UAOpt);
+
+	buffer[11] = lowByte(Abl.UROpt);
+	buffer[12] = highByte(Abl.UROpt);
+
+	buffer[13] = lowByte(In.UA);
+	buffer[14] = highByte(In.UA);
+
+	buffer[15] = lowByte(In.UR);
+	buffer[16] = highByte(In.UR);
 
 	for (uint16_t i = 0; i < RuntimeSize; i++)
 	{
