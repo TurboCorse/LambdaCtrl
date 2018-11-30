@@ -686,7 +686,7 @@ void SendCfg(void)
 	*/
 }
 
-#define RuntimeSize 17
+#define RuntimeSize 20
 
 void SendRuntime(void)
 {
@@ -715,6 +715,11 @@ void SendRuntime(void)
 
 	buffer[15] = lowByte(In.UR);
 	buffer[16] = highByte(In.UR);
+
+	buffer[17] = Abl.Mode;
+
+	buffer[18] = lowByte(Abl.SupplyVoltage);
+	buffer[19] = highByte(Abl.SupplyVoltage);
 
 	for (uint16_t i = 0; i < RuntimeSize; i++)
 	{
