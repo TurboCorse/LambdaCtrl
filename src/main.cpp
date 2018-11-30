@@ -90,15 +90,31 @@ void loop()
 
 	/* Read tick */
 	Abl.Tick = millis();
+
+	/* Increment main loop counter */
+	Abl.MainLoopCnt++;
+
+	/* Every second */
+	if ((Abl.Tick - Abl.LastSecondTick) >= 1000)
+	{
+		Abl.LoopsSec = Abl.MainLoopCnt;
+		Abl.MainLoopCnt = 0;
+		Abl.RuntimeSec++;
+		Abl.LastSecondTick = Abl.Tick;
+	}
+
+	/* Check if we have serial data to read */
+#if (COM_TS > 0)
+	if (Serial.available() > 0)
+	{
+		ParseSerial();
+	}
+#endif
+
+	/* Check if we should process main theard */
 	if ((Abl.Tick - Abl.LastMainTick) >= 2)
 	{
-		/* Check if we have serial data to read */
-		#if (COM_TS > 0)
-			if (Serial.available())
-			{
-				ParseSerial(Serial.read());
-			}
-		#endif
+
 
 		/* Read Inputs */	
 		Inputs(&In);
@@ -169,42 +185,42 @@ void loop()
 		
 		/* Write Outputs */
 		Outputs(&Out);
-
-		/* Update Serial port in debug mode */
-		if ((Abl.Tick - Abl.LastSerialTick) >= 150)
-		{
-			if (Abl.Mode == PRESET)
-			{
-				Out.Led1 ^= 1;
-			}
-			
-	#if (DEBUG > 1)
-			Serial.print(F("UR:"));
-			Serial.println(In.UR);		
-			Serial.print(F("UA:"));
-			Serial.println(In.UA);
-			Serial.print(F("IP:"));
-			Serial.println(Cj.IP);	
-	#endif
-	#if (DEBUG > 0)
-			Serial.print(F("Mode:"));
-			Serial.println(ModeName[Abl.Mode]);	
-			Serial.print(F("Supply:"));
-			Serial.println(Abl.SupplyVoltage / 1000.0);	
-
-			if (Abl.CjState == cjNORMALV8 || Abl.CjState == cjNORMALV17)
-			{
-				Serial.print(F("Lambda:"));
-				Serial.println(Abl.Lambda / 100.0);					
-			}
-			else
-			{
-				Serial.print(F("Cj:"));
-				Serial.println(Abl.CjAnsw, HEX);
-			}
-	#endif	
-			Abl.LastSerialTick = Abl.Tick;
-		}
 		Abl.LastMainTick = Abl.Tick;
+	}
+
+	/* Update Serial port in debug mode */
+	if ((Abl.Tick - Abl.LastSerialTick) >= 150)
+	{
+		if (Abl.Mode == PRESET)
+		{
+			Out.Led1 ^= 1;
+		}
+
+#if (DEBUG > 1)
+		Serial.print(F("UR:"));
+		Serial.println(In.UR);
+		Serial.print(F("UA:"));
+		Serial.println(In.UA);
+		Serial.print(F("IP:"));
+		Serial.println(Cj.IP);
+#endif
+#if (DEBUG > 0)
+		Serial.print(F("Mode:"));
+		Serial.println(ModeName[Abl.Mode]);
+		Serial.print(F("Supply:"));
+		Serial.println(Abl.SupplyVoltage / 1000.0);
+
+		if (Abl.CjState == cjNORMALV8 || Abl.CjState == cjNORMALV17)
+		{
+			Serial.print(F("Lambda:"));
+			Serial.println(Abl.Lambda / 100.0);
+		}
+		else
+		{
+			Serial.print(F("Cj:"));
+			Serial.println(Abl.CjAnsw, HEX);
+		}
+#endif
+		Abl.LastSerialTick = Abl.Tick;
 	}
 }

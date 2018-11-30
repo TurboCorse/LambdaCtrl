@@ -299,10 +299,14 @@ void Calibrate(void)
 			Abl.UROpt /= CJ_CALIBRATION_SAMPLES;
 			Out.Led1 = HIGH;
 			Abl.Mode = IDLE;
+
+#if (DEBUG > 1)
 			Serial.print("UA:");
 			Serial.println(Abl.UAOpt);
 			Serial.print("UR:");
 			Serial.println(Abl.UROpt);
+#endif
+
 			Abl.LastTimeoutTick = Abl.Tick;
 			n = 0;
 		}
@@ -599,25 +603,29 @@ void CheckCfg(tCfg* cfg)
 }
 
 
-void ParseSerial(uint8_t ch)
+void ParseSerial(void)
 {
-	static uint8_t pending;
+	static uint8_t MultiCmd;
 	static uint8_t cmd;
-	if (pending == false)
+
+	if (MultiCmd == false)
 	{
-		cmd = ch;
+		cmd = Serial.read();
 	}
 
 	switch (cmd)
 	{
 		case 'A':
+			SendRuntime();		
 			break;
 
 		case 'B':
+			eeprom_update_block((const void*)&Cfg, CFG_EEPROM_ADDR, sizeof(tCfg));
 			break;
 
 		case 'C':
-			Serial.print("1");
+			Serial.write(lowByte(Abl.LoopsSec));
+			Serial.write(highByte(Abl.LoopsSec));			
 			break;
 
 		case 'F':
@@ -625,19 +633,36 @@ void ParseSerial(uint8_t ch)
 			break;
 		
 		case 'Q':
+			Serial.print(F("IOExtendNanoLambda201811"));
 			break;
 		
 		case 'S':
+			
+			Serial.print(F("Nano Lambda V0.0.1 201811 (c) TurboCorse Electronics"));
+			Abl.RuntimeSec = 0;
 			break;
 		
+		case 'V':
+			SendCfg();
+			break;
+
 		case 'W':
+			MultiCmd = true;
+			if (Serial.available() >= 2)
+			{
+				uint8_t offset, value;
+				uint8_t *dst = (uint8_t *)&Cfg;
+
+				offset = Serial.read();	// Read offset where to store the received value
+				value = Serial.read();	// Value to store
+				*(dst + offset) = value;
+				MultiCmd = false;
+			}
 			break;
 
 		default:
 			break;
 	}
-
-
 }
 
 void SendTbl(uint8_t* src, size_t size)
@@ -656,4 +681,29 @@ void SendCfg(void)
 	{
 		Serial.write(*src++);
 	}
+}
+
+#define RuntimeSize 9
+
+void SendRuntime(void)
+{
+	uint8_t buffer[64];
+
+	buffer[0] = ll(Abl.RuntimeSec);
+	buffer[1] = lh(Abl.RuntimeSec);
+	buffer[2] = hl(Abl.RuntimeSec);
+	buffer[3] = hh(Abl.RuntimeSec);
+
+	buffer[4] = ll(Abl.LoopsSec);
+	buffer[5] = lh(Abl.LoopsSec);
+	buffer[6] = hl(Abl.LoopsSec);
+	buffer[7] = hh(Abl.LoopsSec);
+
+	buffer[8] = Abl.Lambda;
+
+	for (uint16_t i = 0; i < RuntimeSize; i++)
+	{
+		Serial.write(buffer[i]);
+	}
+
 }

@@ -70,7 +70,7 @@
 
 #define PROBE_PID_PERIOD						10		/* xx milliseconds */
 
-#define DEBUG									1		/* Define debug mode 0 = off, 1 = Minimum, 2= all */
+#define DEBUG									0		/* Define debug mode 0 = off, 1 = Minimum, 2= all */
 #define COM_TS									1		/* Work with tuner studio */
 #define CFG_EEPROM_ADDR							0x0000	/* Address for configuration within EEPROM */
 
@@ -112,6 +112,11 @@
 
 /* Calculate millivolt from adc */
 #define AdcToVoltage(a) (a * 5000UL / 1023UL)
+
+#define hh(a) (uint8_t)((a & 0xFF000000) >> 24)
+#define hl(a) (uint8_t)((a & 0xFF0000) >> 16)
+#define lh(a) (uint8_t)((a & 0xFF00) >> 8)
+#define ll(a) (uint8_t)((a & 0xFF))
 
 typedef enum{
 	INVALID = 0,
@@ -160,6 +165,10 @@ typedef struct
 	uint32_t LastSerialTick;
 	uint32_t LastErrorTick;
 	uint32_t LastTimeoutTick;
+	uint32_t LastSecondTick;
+	volatile uint32_t RuntimeSec;
+	volatile uint32_t MainLoopCnt;
+	volatile uint32_t LoopsSec;
 	int16_t VoltageOffset;
 	int16_t	SupplyVoltage;
 	uint8_t SupplyErrCnt;
@@ -246,6 +255,7 @@ extern int16_t Interpolate(int16_t Ip);
 
 
 extern void CheckCfg(tCfg* cfg);
-extern void ParseSerial(uint8_t ch);
+extern void ParseSerial(void);
 extern void SendTbl(uint8_t* src, size_t size);
 extern void SendCfg(void);
+extern void SendRuntime(void);
