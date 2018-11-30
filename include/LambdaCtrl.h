@@ -89,6 +89,8 @@
 #define CJ125_DIAG_REG_STATUS_NOSENSOR      	0x287F  /* The response of the diagnostic register when no sensor is connected. */
 #define CJ125_INIT_REG1_STATUS_0            	0x2888  /* The response of the init register when V=8 amplification is in use. */
 #define CJ125_INIT_REG1_STATUS_1           	 	0x2889	/* The response of the init register when V=17 amplification is in use. */
+#define CJ125_CMD_VALID							0x2800	/* Actual command was valid */
+#define Cj125_CMD_VALID_MASK					0x28FF	/* Command valid mask */
 
 /* Define DAC MCP4725 address MCP4725A2T-E/CH */
 #define DAC1_ADDR								0x64	/* Address for DAC 1 chip A0 tied to GND */

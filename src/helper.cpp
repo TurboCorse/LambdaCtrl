@@ -276,13 +276,17 @@ void Calibrate(void)
 	if (Abl.CjMode != cjCALIBRATION)
 	{
 		ret = ComCj(CJ125_INIT_REG1_MODE_CALIBRATE);
-		Abl.CjMode = cjCALIBRATION;
-		n = 0;
-		Abl.LastCjTick = Abl.Tick;
+		/* Check if the command was valid */
+		if ((ret & Cj125_CMD_VALID_MASK) == CJ125_CMD_VALID)
+		{
+			Abl.CjMode = cjCALIBRATION;
+			n = 0;
+			Abl.LastCjTick = Abl.Tick;
+		}
 	}
 	
 	/* Read UA, UR */
-	if ((Abl.Tick - Abl.LastCjTick) >= CJ_CALIBRATION_PERIOD)
+	if (((Abl.Tick - Abl.LastCjTick) >= CJ_CALIBRATION_PERIOD) && Abl.CjMode == cjCALIBRATION)
 	{
 		/* Only if UA , UR within allowed range */
 		if (((UA_MIN_VALUE < In.UA) && (In.UA < UA_MAX_VALUE)) && ((UR_MIN_VALUE < In.UR) && (In.UR < UR_MAX_VALUE)))
@@ -331,8 +335,11 @@ void Idle(void)
 	if (Abl.CjMode != cjNORMALV8)
 	{
 		ret = ComCj(CJ125_INIT_REG1_MODE_NORMAL_V8);
-		Abl.CjMode = cjNORMALV8;
-		ledtick = Abl.Tick;
+		/* Check if the command was valid */
+		if ((ret & Cj125_CMD_VALID_MASK) == CJ125_CMD_VALID)
+		{
+			Abl.CjMode = cjNORMALV8;
+		}
 	}
 	
 	/* Toggle heater led  to show we idle */
@@ -343,7 +350,7 @@ void Idle(void)
 	}
 	
 	/* Check if we can go to heater condensate (Enable pin low) */
-	if (In.EN == LOW)
+	if (In.EN == LOW && Abl.CjMode == cjNORMALV8)
 	{
 		Abl.Mode = CONDENSATE;
 		Out.Led2 = LOW;
