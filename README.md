@@ -9,6 +9,12 @@ Only LSU 4.9 is supported at the moment.
 This project is a firmware implememtation for the NanoLambda Board from ruzki.
 https://github.com/ruzki/Nano_Lambda
 
+##### Development status
+- [x] LSU 4.9
+- [x] Wideband lambda output:0.5-4.5V / 0.68-1.36L
+- [ ] Narrowband lambda output
+
+
 
 
 
