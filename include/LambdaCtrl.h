@@ -102,7 +102,7 @@
 
 /* Lambda Outputs are defined as follow:
  *	
- *	0.5V = 0,68 Lambda = 10 AFR (Gasoline)
+ *	0,5V = 0,68 Lambda = 10 AFR (Gasoline)
  *	4,5V = 1,36 Lambda = 20 AFR (Gasoline)
  *
  *	Internal Lambda is used in a range from 68..136
@@ -154,6 +154,7 @@ typedef struct
 	uint16_t tCondensate;
 	uint16_t tPreheat;
 }tCfg;
+//TODO add vars for can id, rate, format
 
 typedef struct
 {
