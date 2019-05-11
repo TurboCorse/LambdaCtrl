@@ -6,7 +6,7 @@ License <br />
 Wideband lambda controller based on bosch cj125.
 Only LSU 4.9 is supported at the moment.
 
-This project is a firmware implememtation for the NanoLambda Board from ruzki.
+This project is a firmware implementation for the NanoLambda Board from ruzki.
 https://github.com/ruzki/Nano_Lambda
 
 ##### Development status
